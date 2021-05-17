@@ -193,18 +193,21 @@ class LicenseResolver {
     protected Set<ResolvedArtifact> getResolvedArtifactsFromResolvedDependencies(Set<ResolvedDependency> resolvedDependencies) {
         HashSet<ResolvedArtifact> resolvedArtifacts = new HashSet<>()
 
-        for (resolvedDependency in resolvedDependencies) {
+        for (ResolvedDependency resolvedDependency in resolvedDependencies) {
             try {
-                if (resolvedDependency.getModuleVersion() == LOCAL_LIBRARY_VERSION) {
-                    /**
-                     * Attempting to getAllModuleArtifacts on a local library project will result
-                     * in AmbiguousVariantSelectionException as there are not enough criteria
-                     * to match a specific variant of the library project. Instead we skip the
-                     * the library project itself and enumerate its dependencies.
-                     */
-                    resolvedArtifacts.addAll(getResolvedArtifactsFromResolvedDependencies(resolvedDependency.getChildren()))
-                } else {
-                    resolvedArtifacts.addAll(resolvedDependency.getAllModuleArtifacts())
+                String dependencyDesc = "$resolvedDependency.moduleGroup:$resolvedDependency.moduleName:$resolvedDependency.moduleVersion".toString()
+                if (isDependencyIncluded(dependencyDesc)) {
+                    if (resolvedDependency.getModuleVersion() == LOCAL_LIBRARY_VERSION) {
+                        /**
+                         * Attempting to getAllModuleArtifacts on a local library project will result
+                         * in AmbiguousVariantSelectionException as there are not enough criteria
+                         * to match a specific variant of the library project. Instead we skip the
+                         * the library project itself and enumerate its dependencies.
+                         */
+                        resolvedArtifacts.addAll(getResolvedArtifactsFromResolvedDependencies(resolvedDependency.getChildren()))
+                    } else {
+                        resolvedArtifacts.addAll(resolvedDependency.getAllModuleArtifacts())
+                    }
                 }
             } catch (Exception exception) {
                 logger.warn("Failed to process $resolvedDependency.name", exception)
