@@ -1,15 +1,14 @@
 // First, apply the publishing plugin
 buildscript {
-  repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
-      jcenter()
+    repositories {
+        gradlePluginPortal()
+        google()
+        jcenter()
     }
-  }
-  dependencies {
-    classpath "com.gradle.publish:plugin-publish-plugin:0.9.1"
-    classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:2.2.+'
-  }
+    dependencies {
+        classpath "com.gradle.publish:plugin-publish-plugin:0.9.1"
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:2.2.2'
+    }
 }
 
 plugins {
@@ -35,6 +34,8 @@ repositories {
     maven { url 'https://jitpack.io' }
     mavenCentral()
     google()
+    gradlePluginPortal()
+    jcenter()
 }
 
 idea {
@@ -43,7 +44,6 @@ idea {
         downloadSources = true
     }
 }
-
 
 scmVersion {
     tag {
@@ -64,7 +64,7 @@ configurations.implementation.transitive = false
 sourceSets.create("integrationTest")
 
 dependencies {
-  signature 'org.codehaus.mojo.signature:java17:1.0@signature'
+    signature 'org.codehaus.mojo.signature:java17:1.0@signature'
 
     implementation "org.codehaus.plexus:plexus-utils:2.0.5"
     implementation "com.mycila.xmltool:xmltool:3.3"
@@ -107,7 +107,7 @@ def integrationTestTask = tasks.register("integrationTest", Test) {
 }
 
 tasks.named('check') {
-    it.dependsOn(integrationTestTask)
+    //it.dependsOn(integrationTestTask)
 }
 
 
@@ -216,7 +216,7 @@ pluginBundle {
         licenseReportPlugin {
             displayName = "License Report plugin for Gradle"
             description = "Reports over licenses"
-            tags = [ "gradle", "plugin", "license", "report" ]
+            tags = ["gradle", "plugin", "license", "report"]
         }
     }
 }

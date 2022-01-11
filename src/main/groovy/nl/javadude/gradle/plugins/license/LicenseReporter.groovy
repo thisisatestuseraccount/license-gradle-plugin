@@ -328,7 +328,7 @@ class LicenseReporter {
                     if (!licensesMap.containsKey(license)) {
                         licensesMap.put(license, new HashSet<String>())
                     }
-                    licensesMap.get(license).add(dependencyMetadata.dependencyFileName)
+                    licensesMap.get(license).add(dependencyMetadata.dependency)
                 }
         }
 
